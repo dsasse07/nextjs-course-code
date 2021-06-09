@@ -1,30 +1,30 @@
-import { useRef } from 'react';
+import { useState } from 'react'
 
-import Card from '../ui/Card';
-import classes from './NewMeetupForm.module.css';
+import Card from '../ui/Card'
+import classes from './NewMeetupForm.module.css'
 
-function NewMeetupForm(props) {
-  const titleInputRef = useRef();
-  const imageInputRef = useRef();
-  const addressInputRef = useRef();
-  const descriptionInputRef = useRef();
+const NewMeetupForm = (props) => {
+  const { onAddMeetup } = props
+  const [formData, setFormData] = useState({
+    title: '',
+    image: '',
+    address: '',
+    description: '',
+  })
 
-  function submitHandler(event) {
-    event.preventDefault();
+  const formChangeHandler = ({ id, value }) => {
+    setFormData({ ...formData, [id]: value })
+  }
 
-    const enteredTitle = titleInputRef.current.value;
-    const enteredImage = imageInputRef.current.value;
-    const enteredAddress = addressInputRef.current.value;
-    const enteredDescription = descriptionInputRef.current.value;
-
-    const meetupData = {
-      title: enteredTitle,
-      image: enteredImage,
-      address: enteredAddress,
-      description: enteredDescription,
-    };
-
-    props.onAddMeetup(meetupData);
+  const submitHandler = (e) => {
+    e.preventDefault()
+    onAddMeetup(formData)
+    setFormData({
+      title: '',
+      image: '',
+      address: '',
+      description: '',
+    })
   }
 
   return (
@@ -32,15 +32,33 @@ function NewMeetupForm(props) {
       <form className={classes.form} onSubmit={submitHandler}>
         <div className={classes.control}>
           <label htmlFor='title'>Meetup Title</label>
-          <input type='text' required id='title' ref={titleInputRef} />
+          <input
+            type='text'
+            required
+            id='title'
+            value={formData.title}
+            onChange={(e) => formChangeHandler(e.target)}
+          />
         </div>
         <div className={classes.control}>
           <label htmlFor='image'>Meetup Image</label>
-          <input type='url' required id='image' ref={imageInputRef} />
+          <input
+            type='url'
+            required
+            id='image'
+            value={formData.image}
+            onChange={(e) => formChangeHandler(e.target)}
+          />
         </div>
         <div className={classes.control}>
           <label htmlFor='address'>Address</label>
-          <input type='text' required id='address' ref={addressInputRef} />
+          <input
+            type='text'
+            required
+            id='address'
+            value={formData.address}
+            onChange={(e) => formChangeHandler(e.target)}
+          />
         </div>
         <div className={classes.control}>
           <label htmlFor='description'>Description</label>
@@ -48,7 +66,8 @@ function NewMeetupForm(props) {
             id='description'
             required
             rows='5'
-            ref={descriptionInputRef}
+            value={formData.description}
+            onChange={(e) => formChangeHandler(e.target)}
           ></textarea>
         </div>
         <div className={classes.actions}>
@@ -56,7 +75,7 @@ function NewMeetupForm(props) {
         </div>
       </form>
     </Card>
-  );
+  )
 }
 
-export default NewMeetupForm;
+export default NewMeetupForm
