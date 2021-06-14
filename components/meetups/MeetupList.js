@@ -5,7 +5,7 @@ const MeetupList = (props) => {
   const { meetups } = props
 
   const meetupComponents = meetups.map((meetup) => {
-    const { id, image, title, address } = meetup
+    const { id, image, title, address, description } = meetup
     return (
       <MeetupItem
         key={id}
@@ -13,6 +13,7 @@ const MeetupList = (props) => {
         image={image}
         title={title}
         address={address}
+        description={description}
       />
     )
   })
