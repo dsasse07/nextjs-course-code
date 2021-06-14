@@ -59,14 +59,53 @@ const HomePage = (props) => {
  * */
 
 export const getStaticProps = async () => {
-  // Read data from file or fetch from db
-  // ALWAYS need to return an object with props
+  /**
+   * Read data from file or fetch from db
+   * ALWAYS need to return an object with props
+   * DATA WILL ONLY UPDATE AT RUN TIME unless we revalidate
+   * */
   return {
     // This is the props that will be passed to this component when build runs
     props: {
       meetups: DUMMY_MEETUP,
     },
+    /**
+     * Unlocks incremental revalidation which means the page will
+     * be occassionally re-pre-generated
+     * Accepts a # of seconds after which Next.js will automatically
+     * update the data IF a request is made after this interval.
+     *
+     * Best method to use unless you need to deal with Auth, headers, or
+     * unless data is changing multiple times per second
+     * */
+    revalidate: 10,
   }
 }
 
+/**
+ * If we want this to be updated for EVERY SINGLE REQUEST
+ * we use getServerSideProps() instead.
+ *
+ * This will not run at build time, it will run on the client
+ * This code will only run on the server.
+ * - We can use this to make API requests using credentials that
+ * shouldn't be exposed to the user
+ * - We can also use it to fetch data
+ *
+ * From the context parameter, we get access to the
+ * request and response objects
+ * */
+
+/*
+export const getServerSideProps = (context) => {
+  const request = context.req
+  const response = contest.res
+
+  return {
+    props: {
+      meetups: DUMMY_MEETUP,
+    },
+  }
+}
+*/
 export default HomePage
