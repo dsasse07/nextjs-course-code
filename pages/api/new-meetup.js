@@ -6,10 +6,14 @@
  * THis route would be:
  * domain.com/api/new-meetup
  *
- * We also ensure that this only accepts POST requests
+ * We also ensure that this only accepts POST
+ *
+ * CODE IN HERE NEVER RUNS ON CLIENT SIDE.
  */
 
-const handler = (request, response) => {
+import { MongoClient } from 'mongodb'
+
+const handler = async (request, response) => {
   /**
    * req.method can be used to determine the HTTP verb
    */
@@ -24,6 +28,16 @@ const handler = (request, response) => {
       address,
       description,
     }
+
+    // Connects to, or creates, specified database
+    const client = await MongoClient.connect(
+      'mongodb+srv://danny:normandy17@cluster0.easw8.mongodb.net/meetupsTestDatabase?retryWrites=true&w=majority'
+    )
+    const db = client.db()
+    const meetupsCollection = db.collection('meetups')
+    const result = await meetupsCollection.insertOne(newMeetup)
+    client.close()
+    response.status(201).json(result)
   }
 }
 

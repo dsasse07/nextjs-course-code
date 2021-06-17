@@ -5,7 +5,7 @@ Here we can import regular react components from a non 'pages' folder
 to be included when this page server side renders
 */
 import MeetupList from '../components/meetups/MeetupList'
-import { useEffect, useState } from 'react'
+import { MongoClient } from 'mongodb'
 
 const DUMMY_MEETUP = [
   {
@@ -64,10 +64,25 @@ export const getStaticProps = async () => {
    * ALWAYS need to return an object with props
    * DATA WILL ONLY UPDATE AT RUN TIME unless we revalidate
    * */
+  const client = await MongoClient.connect(
+    'mongodb+srv://danny:normandy17@cluster0.easw8.mongodb.net/meetupsTestDatabase?retryWrites=true&w=majority'
+  )
+  const db = client.db()
+  const meetupsCollection = db.collection('meetups')
+  const data = await meetupsCollection.find().toArray()
+  const meetups = data.map((meetup) => {
+    return {
+      id: meetup._id.toString(),
+      title: meetup.title,
+      address: meetup.address,
+      image: meetup.image,
+      description: meetup.description,
+    }
+  })
   return {
     // This is the props that will be passed to this component when build runs
     props: {
-      meetups: DUMMY_MEETUP,
+      meetups: meetups,
     },
     /**
      * Unlocks incremental revalidation which means the page will
@@ -78,7 +93,7 @@ export const getStaticProps = async () => {
      * Best method to use unless you need to deal with Auth, headers, or
      * unless data is changing multiple times per second
      * */
-    revalidate: 10,
+    revalidate: 5,
   }
 }
 
