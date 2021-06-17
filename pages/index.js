@@ -6,33 +6,7 @@ to be included when this page server side renders
 */
 import MeetupList from '../components/meetups/MeetupList'
 import { MongoClient } from 'mongodb'
-
-const DUMMY_MEETUP = [
-  {
-    id: '1',
-    image:
-      'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flonelyplanetimages.imgix.net%2Fmastheads%2Fstock-photo-roman-sunset-77415821.jpg%3Fsharp%3D10%26vib%3D20%26w%3D1200&f=1&nofb=1',
-    title: 'Meetup 1',
-    address: 'Nowhere Court',
-    description: 'First Meetup!',
-  },
-  {
-    id: '2',
-    image:
-      'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flonelyplanetimages.imgix.net%2Fmastheads%2Fstock-photo-roman-sunset-77415821.jpg%3Fsharp%3D10%26vib%3D20%26w%3D1200&f=1&nofb=1',
-    title: 'Meetup 2',
-    address: 'Nowhere Court',
-    description: 'Second Meetup!',
-  },
-  {
-    id: '3',
-    image:
-      'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flonelyplanetimages.imgix.net%2Fmastheads%2Fstock-photo-roman-sunset-77415821.jpg%3Fsharp%3D10%26vib%3D20%26w%3D1200&f=1&nofb=1',
-    title: 'Meetup 3',
-    address: 'Nowhere Court',
-    description: 'Third Meetup!',
-  },
-]
+import Head from 'next/head'
 
 const HomePage = (props) => {
   const { meetups } = props
@@ -45,7 +19,18 @@ const HomePage = (props) => {
   }, [])
   */
 
-  return <MeetupList meetups={meetups} />
+  return (
+    <>
+      <Head>
+        <title>React Meetups</title>
+        <meta
+          name='description'
+          content='Browse a list of highly React Meetups'
+        />
+      </Head>
+      <MeetupList meetups={meetups} />
+    </>
+  )
 }
 
 /**
@@ -64,9 +49,7 @@ export const getStaticProps = async () => {
    * ALWAYS need to return an object with props
    * DATA WILL ONLY UPDATE AT RUN TIME unless we revalidate
    * */
-  const client = await MongoClient.connect(
-    'mongodb+srv://danny:normandy17@cluster0.easw8.mongodb.net/meetupsTestDatabase?retryWrites=true&w=majority'
-  )
+  const client = await MongoClient.connect(process.env.MONGO_URI)
   const db = client.db()
   const meetupsCollection = db.collection('meetups')
   const data = await meetupsCollection.find().toArray()

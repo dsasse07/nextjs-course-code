@@ -3,6 +3,8 @@ Path: '/meetups/new'
 */
 import NewMeetupForm from '../../components/meetups/NewMeetupForm'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
+
 const NewMeetupPage = () => {
   const router = useRouter()
 
@@ -20,7 +22,18 @@ const NewMeetupPage = () => {
       .then(router.push('/'))
   }
 
-  return <NewMeetupForm onAddMeetup={handleAddMeetup} />
+  return (
+    <>
+      <Head>
+        <title>Create a New Meetup</title>
+        <meta
+          name='description'
+          content='Share your exciting new React Meetup'
+        />
+      </Head>
+      <NewMeetupForm onAddMeetup={handleAddMeetup} />
+    </>
+  )
 }
 
 export default NewMeetupPage

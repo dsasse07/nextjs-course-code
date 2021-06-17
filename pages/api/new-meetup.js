@@ -30,9 +30,7 @@ const handler = async (request, response) => {
     }
 
     // Connects to, or creates, specified database
-    const client = await MongoClient.connect(
-      'mongodb+srv://danny:normandy17@cluster0.easw8.mongodb.net/meetupsTestDatabase?retryWrites=true&w=majority'
-    )
+    const client = await MongoClient.connect(process.env.MONGO_URI)
     const db = client.db()
     const meetupsCollection = db.collection('meetups')
     const result = await meetupsCollection.insertOne(newMeetup)
