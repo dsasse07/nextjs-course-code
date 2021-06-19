@@ -63,9 +63,7 @@ export const getStaticProps = async (context) => {
   const params = context.params
   const id = params.meetupId
 
-  const client = await MongoClient.connect(
-    'mongodb+srv://danny:normandy17@cluster0.easw8.mongodb.net/meetupsTestDatabase?retryWrites=true&w=majority'
-  )
+  const client = await MongoClient.connect(process.env.MONGO_URI)
   const db = client.db()
   const meetupsCollection = db.collection('meetups')
   // fetching ALL meetups, but with only their _id fields
