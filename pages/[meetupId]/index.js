@@ -51,7 +51,10 @@ export const getStaticPaths = async () => {
   client.close()
 
   return {
-    fallback: false,
+    // 'blocking' will cause a page missing from the cache to attempt to be built and cached before serving
+    // If true, a blank page will be returned, and then populated if data is available
+    // if false, only pre-generated pages will be available
+    fallback: 'blocking',
     paths: ids,
   }
 }
